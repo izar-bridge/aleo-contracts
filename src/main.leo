@@ -137,12 +137,6 @@ program izar_v2.aleo {
         // check token id is from chain id
         let exist: bool = Mapping::get_or_use(token_exist, token_id, false);
         assert(exist);
-        let metadata: IzarTokenMeta = Mapping::get_or_use(token_metas, token_id, IzarTokenMeta {
-            token_id: 0u32,
-            token_name: 0u128,
-            chain_id: 0u32,
-        });
-        assert_eq(metadata.chain_id, to_chain_id);
 
         // burn
         let cur_amount: u128 = Mapping::get_or_use(balance, sender_account, 0u128);
