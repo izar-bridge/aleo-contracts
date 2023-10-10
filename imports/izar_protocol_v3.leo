@@ -1,5 +1,5 @@
 program izar_protocol_v3.aleo {
-    mapping izar_keeper: u32 => address;
+    mapping izar_keeper: bool => Keepers20;
     mapping izar_digest: bool => scalar;
     // 0: current_epoch, 1: current_keeper_num;
     mapping izar_config: u8 => u32;
@@ -14,28 +14,115 @@ program izar_protocol_v3.aleo {
         return aleo1yu6ssnehj4plgznatenfut3hkrfus26kqd226k99wfx79jqmsuxqfernns;
     }
 
-    /* TODO: config setup */
-    // transition set_epoch (epoch: u32) {
-    //     assert_eq(self.caller, contract_owner());
-    //     return then finalize (epoch);
-    // }
+    inline unvalid_contract() -> address {
+        return aleo1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq3ljyzc;
+    }
 
-    // finalize set_epoch (epoch) {
-    //     assert(epoch > Mapping::get_or_use(izar_config, 0u8, 0u32));
-    //     Mapping::set(izar_config, 0u8, epoch);
-    // }
+    /* config setup */
+    transition set_epoch (epoch: u32) {
+        assert_eq(self.caller, contract_owner());
+        return then finalize (epoch);
+    }
 
-    // transition update_keeper (keeper_idx: u32, keeper: address) {
-    //     assert_eq(self.caller, contract_owner());
-    //     return then finalize (keeper_idx, keeper);
-    // }
+    finalize set_epoch (epoch: u32) {
+        assert(epoch > Mapping::get_or_use(izar_config, 0u8, 0u32));
+        Mapping::set(izar_config, 0u8, epoch);
+    }
 
-    // finalize update_keeper (keeper_idx: u32, keeper: address, ) {
-    //     // get current
-    // }
+    transition update_keeper (keepers: Keepers20) {
+        assert_eq(self.caller, contract_owner());
+        return then finalize (keepers);
+    }
+
+    finalize update_keeper (keepers: Keepers20) {
+        let accpeted: u32 = 0u32;
+
+        if keepers.k0 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k1 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k2 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k3 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k4 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k5 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k6 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k7 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k8 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k9 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k10 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k11 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k12 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k13 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k14 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k15 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k16 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k17 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k18 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        if keepers.k19 != unvalid_contract() {
+            accpeted += 1u32;
+        }
+
+        Mapping::set(izar_keeper, true, keepers);
+        Mapping::set(izar_config, 1u8, accpeted);
+    }
 
     transition verify (from_chain_id: u32, signatures: Signatures20, keepers: Keepers20, payload: IzarRecvMsg) {
-        let (result, accepted): (scalar, u32) = verify_sigs_3(keepers, signatures, payload);
+        let (result, accepted): (scalar, u32) = verify_sigs(keepers, signatures, payload);
         let nonce: Nonce = Nonce {
             chain_id: from_chain_id,
             nonce: payload.nonce,
@@ -115,49 +202,7 @@ program izar_protocol_v3.aleo {
         fee: u128,
     }
 
-    function verify_sigs_3 (keepers: Keepers20, signatures: Signatures20, msg: IzarRecvMsg) -> (scalar, u32) {
-        let accepted: u32 = 0u32;
-
-        if signatures.s0.verify(keepers.k0, msg) {
-            accepted += 1u32;
-        }
-        if signatures.s2.verify(keepers.k2, msg) {
-            accepted += 1u32;
-        }
-        if signatures.s3.verify(keepers.k3, msg) {
-            accepted += 1u32;
-        }
-
-        let result: scalar = Poseidon8::hash_to_scalar(keepers);
-
-        return (result, accepted);
-    }
-
-    function verify_sigs_5 (keepers: Keepers20, signatures: Signatures20, msg: IzarRecvMsg) -> (scalar, u32) {
-        let accepted: u32 = 0u32;
-
-        if signatures.s0.verify(keepers.k0, msg) {
-            accepted += 1u32;
-        }
-        if signatures.s2.verify(keepers.k2, msg) {
-            accepted += 1u32;
-        }
-        if signatures.s3.verify(keepers.k3, msg) {
-            accepted += 1u32;
-        }
-        if signatures.s4.verify(keepers.k4, msg) {
-            accepted += 1u32;
-        }
-        if signatures.s5.verify(keepers.k5, msg) {
-            accepted += 1u32;
-        }
-
-        let result: scalar = Poseidon8::hash_to_scalar(keepers);
-
-        return (result, accepted);
-    }
-
-    function verify_sigs_7 (keepers: Keepers20, signatures: Signatures20, msg: IzarRecvMsg) -> (scalar, u32) {
+    function verify_sigs (keepers: Keepers20, signatures: Signatures20, msg: IzarRecvMsg) -> (scalar, u32) {
         let accepted: u32 = 0u32;
 
         if signatures.s0.verify(keepers.k0, msg) {
@@ -179,6 +224,42 @@ program izar_protocol_v3.aleo {
             accepted += 1u32;
         }
         if signatures.s7.verify(keepers.k7, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s8.verify(keepers.k8, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s9.verify(keepers.k9, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s10.verify(keepers.k10, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s11.verify(keepers.k11, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s12.verify(keepers.k12, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s13.verify(keepers.k13, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s14.verify(keepers.k14, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s15.verify(keepers.k15, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s16.verify(keepers.k16, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s17.verify(keepers.k17, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s18.verify(keepers.k18, msg) {
+            accepted += 1u32;
+        }
+        if signatures.s19.verify(keepers.k19, msg) {
             accepted += 1u32;
         }
 
