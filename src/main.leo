@@ -7,8 +7,8 @@ program izar_sepolia_proxy_v1.aleo {
         return aleo1yu6ssnehj4plgznatenfut3hkrfus26kqd226k99wfx79jqmsuxqfernns;
     }
 
-    transition receive_payload (from_chain_id: u32, signatures: Signatures20, keepers: Keepers20, payload: IzarRecvMsg, mode: bool) {
-        izar_protocol_v3.leo/verify(from_chain_id, signatures, keepers, payload);
+    transition receive_payload (signatures: Signatures20, keepers: Keepers20, payload: IzarRecvMsg, mode: bool) {
+        izar_protocol_v3.leo/verify(signatures, keepers, payload);
         // mint token by mode
         if mode {
             zk_sepolia_eth.leo/mint_public(payload.to_addr, payload.amount);
