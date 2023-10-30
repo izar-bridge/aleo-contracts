@@ -111,8 +111,8 @@ program izar_protocol_v3.aleo {
         Mapping::set(izar_config, 1u8, accpeted);
     }
 
-    transition verify (signatures: Signatures20, keepers: Keepers20, payload: IzarRecvMsg) {
-        let (result, accepted): (scalar, u32) = verify_sigs(keepers, signatures, payload);
+    transition verify (signatures: Signatures3, keepers: Keepers3, payload: IzarRecvMsg) {
+        let (result, accepted): (scalar, u32) = verify_sigs_3(keepers, signatures, payload);
         let nonce: Nonce = Nonce {
             chain_id: payload.from_chain_id,
             nonce: payload.nonce,
@@ -177,6 +177,18 @@ program izar_protocol_v3.aleo {
         s19: signature,
     }
 
+    struct Keepers3 {
+        k0: address,
+        k1: address,
+        k2: address,
+    }
+
+    struct Signatures3 {
+        s0: signature,
+        s1: signature,
+        s2: signature,
+    }
+
     struct IzarRecvMsg {
         from_chain_id: u32,
         nonce: u128,
@@ -191,6 +203,32 @@ program izar_protocol_v3.aleo {
         to_asset_addr: field,
         amount: u128,
         fee: u128,
+    }
+
+    function verify_sigs_3 (keepers: Keepers3, signatures: Signatures3, msg: IzarRecvMsg) -> (scalar, u32) {
+        let accepted: u32 = 0u32;
+
+        if keepers.k0 != invalid_contract() {
+            if signatures.s0.verify(keepers.k0, msg) {
+                accepted += 1u32;
+            }
+        }
+
+        if keepers.k1 != invalid_contract() {
+            if signatures.s1.verify(keepers.k1, msg) {
+                accepted += 1u32;
+            }
+        }
+
+        if keepers.k2 != invalid_contract() {
+            if signatures.s2.verify(keepers.k2, msg) {
+                accepted += 1u32;
+            }
+        }
+
+        let result: scalar = Poseidon8::hash_to_scalar(keepers);
+
+        return (result, accepted);
     }
 
     function verify_sigs (keepers: Keepers20, signatures: Signatures20, msg: IzarRecvMsg) -> (scalar, u32) {

@@ -40,41 +40,6 @@ program zk_goerli_eth.aleo {
         Mapping::set(contract_ownership, true, recipient);
     }
 
-    /* allowance */
-
-    transition approve (spender: address, amount: u128) {
-        // TODO: when leo update the compiler, we can use `self.singer` instead of `self.caller`
-        return then finalize (self.caller, spender, amount);
-    }
-
-    finalize approve (holder: address, spender: address, amount: u128) {
-        let pair: AllowPair = AllowPair {
-            holder,
-            spender,
-        };
-        Mapping::set(allowance, pair, amount);
-    }
-
-    transition transfer_from (from: address, to: address, amount: u128) {
-        return then finalize (self.caller, from, to, amount);
-    }
-
-    finalize transfer_from (spender: address, from: address, to: address, amount: u128) {
-        let pair: AllowPair = AllowPair {
-            holder: from,
-            spender,
-        };
-        // set allowance
-        let current_allow: u128 = Mapping::get_or_use(allowance, pair, 0u128);
-        Mapping::set(allowance, pair, current_allow - amount);
-
-        // transfer
-        let current_from: u128 = Mapping::get_or_use(account, from, 0u128);
-        Mapping::set(account, from, current_from - amount);
-        let current_to: u128 = Mapping::get_or_use(account, to, 0u128);
-        Mapping::set(account, to, current_to - amount);
-    }
-
     /* mint & burn */
 
     transition mint_public(public receiver: address, public amount: u128) {
@@ -126,7 +91,7 @@ program zk_goerli_eth.aleo {
 
     /* Transfer */
     transition transfer_public(public receiver: address, public amount: u128) {
-        return then finalize(self.caller, receiver, amount);
+        return then finalize(self.signer, receiver, amount);
     }
 
     finalize transfer_public(public sender: address, public receiver: address, public amount: u128) {
@@ -175,7 +140,7 @@ program zk_goerli_eth.aleo {
             amount: amount,
         };
 
-        return transferred then finalize(self.caller, amount);
+        return transferred then finalize(self.signer, amount);
     }
 
     finalize transfer_public_to_private(public sender: address, public amount: u128) {
