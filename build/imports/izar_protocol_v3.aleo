@@ -216,6 +216,7 @@ finalize verify:
     mul r8 2u32 into r9;
     gte r2 r9 into r10;
     assert.eq r10 true;
+    set true into nonces[r0];
 
 
 closure verify_sigs:

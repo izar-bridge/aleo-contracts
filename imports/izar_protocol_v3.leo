@@ -129,6 +129,9 @@ program izar_protocol_v3.aleo {
         assert(keeper_digest == Mapping::get(izar_digest, true));
         let valid_num: u32 = Mapping::get(izar_config, 1u8);
         assert(accepted >= valid_num / 3u32 * 2u32); // TODO: check this
+
+        // set nonce
+        Mapping::set(nonces, nonce, true);
     }
 
     struct Keepers20 {
