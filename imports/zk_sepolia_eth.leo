@@ -91,7 +91,7 @@ program zk_sepolia_eth.aleo {
 
     /* Transfer */
     transition transfer_public(public receiver: address, public amount: u128) {
-        return then finalize(self.signer, receiver, amount);
+        return then finalize(self.caller, receiver, amount);
     }
 
     finalize transfer_public(public sender: address, public receiver: address, public amount: u128) {
@@ -140,7 +140,7 @@ program zk_sepolia_eth.aleo {
             amount: amount,
         };
 
-        return transferred then finalize(self.signer, amount);
+        return transferred then finalize(self.caller, amount);
     }
 
     finalize transfer_public_to_private(public sender: address, public amount: u128) {
