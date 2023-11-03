@@ -24,6 +24,7 @@ program zk_sepolia_eth.aleo {
         assert_eq(is_initial, false);
 
         Mapping::set(contract_ownership, true, holder);
+        Mapping::set(initialed, true, true);
     }
 
     transition transfer_ownership (recipient: address) {
