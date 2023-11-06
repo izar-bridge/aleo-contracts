@@ -38,6 +38,7 @@ finalize initial:
     get.or_use initialed[true] false into r1;
     assert.eq r1 false;
     set r0 into contract_ownership[true];
+    set true into initialed[true];
 
 
 function transfer_ownership:
@@ -122,7 +123,7 @@ finalize burn_private:
 function transfer_public:
     input r0 as address.public;
     input r1 as u128.public;
-    async transfer_public self.signer r0 r1 into r2;
+    async transfer_public self.caller r0 r1 into r2;
     output r2 as zk_goerli_eth.aleo/transfer_public.future;
 
 finalize transfer_public:
@@ -170,7 +171,7 @@ function transfer_public_to_private:
     input r0 as address.public;
     input r1 as u128.public;
     cast r0 r1 into r2 as token.record;
-    async transfer_public_to_private self.signer r1 into r3;
+    async transfer_public_to_private self.caller r1 into r3;
     output r2 as token.record;
     output r3 as zk_goerli_eth.aleo/transfer_public_to_private.future;
 

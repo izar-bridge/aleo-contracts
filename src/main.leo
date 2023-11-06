@@ -10,14 +10,6 @@ program izar_sepolia_proxy_v1.aleo {
     transition receive_payload (signatures: Signatures3, keepers: Keepers3, payload: IzarRecvMsg) {
         izar_protocol_v3.leo/verify(signatures, keepers, payload);
         zk_sepolia_eth.leo/mint_public(payload.to_addr, payload.amount);
-
-        return then finalize(self.caller);
-    }
-
-    // !NOTICE: IT'S A LEO COMPILER BUG
-    finalize receive_payload (caller: address) {
-        // add some noise
-        let a: u32 = 1u32;
     }
 
     transition cross_public(public payload: IzarCrossMsg) {
@@ -25,15 +17,8 @@ program izar_sepolia_proxy_v1.aleo {
         zk_sepolia_eth.leo/transfer_public(proxy_owner(), payload.fee);
         // burn token
         zk_sepolia_eth.leo/burn_public(self.signer, payload.amount - payload.fee); // TODO: when leo update the compiler, we can use `self.singer` instead of `self.caller`
-
-        return then finalize(self.caller);
     }
 
-    // !NOTICE: IT'S A LEO COMPILER BUG
-    finalize cross_public(caller: address) {
-        // add some noise
-        let a: u32 = 1u32;
-    }
 
     // TODO: is needed to use multisig to call this function？
     transition upgrade (public new_contract: address) {
