@@ -10,13 +10,9 @@ program izar_sepolia_proxy_v1.aleo;
 
 
 
-
-
-
-
 function receive_payload:
-    input r0 as Signatures3.private;
-    input r1 as Keepers3.private;
+    input r0 as [signature; 20u32].private;
+    input r1 as [address; 20u32].private;
     input r2 as IzarRecvMsg.private;
     call izar_protocol_v3.aleo/verify r0 r1 r2 into r3;
     call zk_sepolia_eth.aleo/mint_public r2.to_addr r2.amount into r4;
