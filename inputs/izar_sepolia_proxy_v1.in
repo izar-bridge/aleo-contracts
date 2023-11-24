@@ -4,6 +4,6 @@ public payload: IzarCrossMsg = IzarCrossMsg {
     to_chain_id: 0u32,
     to_addr: 0field,
     to_asset_addr: 0field,
-    amount: 0u128,
-    fee: 0u128,
+    amount: 100u128,
+    fee: 10u128,
 };

@@ -6,7 +6,23 @@ program izar_sepolia_proxy_v1.aleo;
 
 
 
+struct Nonce:
+    chain_id as u32;
+    nonce as u128;
 
+struct IzarRecvMsg:
+    from_chain_id as u32;
+    nonce as u128;
+    to_addr as address;
+    to_asset_addr as address;
+    amount as u128;
+
+struct IzarCrossMsg:
+    to_chain_id as u32;
+    to_addr as field;
+    to_asset_addr as field;
+    amount as u128;
+    fee as u128;
 
 
 

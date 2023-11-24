@@ -16,7 +16,7 @@ program izar_sepolia_proxy_v1.aleo {
         // tranfer fee to fee account
         zk_sepolia_eth.leo/transfer_public(proxy_owner(), payload.fee);
         // burn token
-        zk_sepolia_eth.leo/burn_public(self.signer, payload.amount - payload.fee); // TODO: when leo update the compiler, we can use `self.singer` instead of `self.caller`
+        zk_sepolia_eth.leo/burn_public(self.caller, payload.amount - payload.fee); // TODO: when leo update the compiler, we can use `self.singer` instead of `self.caller`
     }
 
 
