@@ -43,8 +43,6 @@ program izar_protocol_v3.aleo {
     finalize update_keeper (keepers: [address; 20]) {
         let accpeted: u32 = 0u32;
 
-        let arr: [u32; 3] = [0u32, 0u32, 0u32];
-
         for i: u8 in 0u8..20u8 {
             if keepers[i] != invalid_contract() {
                 accpeted += 1u32;
