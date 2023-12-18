@@ -1,17 +1,11 @@
 program zk_goerli_eth.aleo {
     mapping account: address => u128;
     mapping contract_ownership: bool => address;
-    mapping allowance: AllowPair => u128;
     mapping initialed: bool => bool;
 
     record token {
         owner: address,
         amount: u128,
-    }
-
-    struct AllowPair {
-        holder: address,
-        spender: address,
     }
 
     /* permission */

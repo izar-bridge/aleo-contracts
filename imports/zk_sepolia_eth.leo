@@ -1,17 +1,11 @@
 program zk_sepolia_eth.aleo {
     mapping account: address => u128;
     mapping contract_ownership: bool => address;
-    mapping allowance: AllowPair => u128;
     mapping initialed: bool => bool;
 
     record token {
         owner: address,
         amount: u128,
-    }
-
-    struct AllowPair {
-        holder: address,
-        spender: address,
     }
 
     /* permission */
@@ -42,7 +36,6 @@ program zk_sepolia_eth.aleo {
     }
 
     /* mint & burn */
-
     transition mint_public(public receiver: address, public amount: u128) {
         return then finalize(receiver, amount, self.caller);
     }

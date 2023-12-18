@@ -7,8 +7,13 @@ program izar_sepolia_proxy_v1.aleo {
         return aleo1yu6ssnehj4plgznatenfut3hkrfus26kqd226k99wfx79jqmsuxqfernns;
     }
 
+    inline program_address() -> address {
+        return aleo1yu6ssnehj4plgznatenfut3hkrfus26kqd226k99wfx79jqmsuxqfernns;
+    }
+
     transition receive_payload (signatures: [signature; 20], keepers: [address; 20], payload: IzarRecvMsg) {
-        izar_protocol_v3.leo/verify(signatures, keepers, payload);
+        let program_addr: address = izar_protocol_v3.leo/verify(signatures, keepers, payload);
+        assert_eq(program_addr, program_address());
         zk_sepolia_eth.leo/mint_public(payload.to_addr, payload.amount);
     }
 
@@ -19,8 +24,6 @@ program izar_sepolia_proxy_v1.aleo {
         zk_sepolia_eth.leo/burn_public(self.caller, payload.amount - payload.fee); // TODO: when leo update the compiler, we can use `self.singer` instead of `self.caller`
     }
 
-
-    // TODO: is needed to use multisig to call this function？
     transition upgrade (public new_contract: address) {
         assert_eq(self.caller, proxy_owner());
         zk_sepolia_eth.leo/transfer_ownership(new_contract);

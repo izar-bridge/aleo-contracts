@@ -4,10 +4,6 @@ record token:
     owner as address.private;
     amount as u128.private;
 
-struct AllowPair:
-    holder as address;
-    spender as address;
-
 
 mapping account:
 	key as address.public;
@@ -17,11 +13,6 @@ mapping account:
 mapping contract_ownership:
 	key as boolean.public;
 	value as address.public;
-
-
-mapping allowance:
-	key as AllowPair.public;
-	value as u128.public;
 
 
 mapping initialed:
