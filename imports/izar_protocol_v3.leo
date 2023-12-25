@@ -15,6 +15,7 @@ program izar_protocol_v3.aleo {
         nonce: u128,
         to_addr: address,
         to_asset_addr: address,
+        protocol_addr: address,
         amount: u128,
     }
 
@@ -32,6 +33,10 @@ program izar_protocol_v3.aleo {
 
     inline invalid_contract() -> address {
         return aleo1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq3ljyzc;
+    }
+
+    inline protocol_contract() -> address {
+        return aleo1zkat7uyv8c6f7vcmj6rfg7ujgp0ydzqgy2lrrj4az6hqwl209uqslyrp36;
     }
 
     /* config setup */
@@ -70,14 +75,15 @@ program izar_protocol_v3.aleo {
         return (result, accepted);
     }
 
-    transition verify (signatures: [signature; 20], keepers: [address; 20], payload: IzarRecvMsg) -> address {
+    transition verify (signatures: [signature; 20], keepers: [address; 20], payload: IzarRecvMsg) {
+        assert_eq(payload.protocol_addr, protocol_contract());
         let (result, accepted): (scalar, u32) = verify_sigs(keepers, signatures, payload);
         let nonce: Nonce = Nonce {
             chain_id: payload.from_chain_id,
             nonce: payload.nonce,
         };
 
-        return payload.to_asset_addr then finalize (nonce, result, accepted);
+        return then finalize (nonce, result, accepted);
     }
 
     finalize verify (nonce: Nonce, keeper_digest: scalar, accepted: u32) {

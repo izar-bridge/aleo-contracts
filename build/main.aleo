@@ -15,11 +15,10 @@ function receive_payload:
     input r0 as [signature; 20u32].private;
     input r1 as [address; 20u32].private;
     input r2 as IzarRecvMsg.private;
-    call izar_protocol_v3.aleo/verify r0 r1 r2 into r3 r4;
-    assert.eq r3 aleo1yu6ssnehj4plgznatenfut3hkrfus26kqd226k99wfx79jqmsuxqfernns;
-    call zk_sepolia_eth.aleo/mint_public r2.to_addr r2.amount into r5;
-    async receive_payload r4 r5 into r6;
-    output r6 as izar_sepolia_proxy_v1.aleo/receive_payload.future;
+    call izar_protocol_v3.aleo/verify r0 r1 r2 into r3;
+    call zk_sepolia_eth.aleo/mint_public r2.to_addr r2.amount into r4;
+    async receive_payload r3 r4 into r5;
+    output r5 as izar_sepolia_proxy_v1.aleo/receive_payload.future;
 
 finalize receive_payload:
     input r0 as izar_protocol_v3.aleo/verify.future;

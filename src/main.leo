@@ -12,8 +12,7 @@ program izar_sepolia_proxy_v1.aleo {
     }
 
     transition receive_payload (signatures: [signature; 20], keepers: [address; 20], payload: IzarRecvMsg) {
-        let program_addr: address = izar_protocol_v3.leo/verify(signatures, keepers, payload);
-        assert_eq(program_addr, program_address());
+        izar_protocol_v3.leo/verify(signatures, keepers, payload);
         zk_sepolia_eth.leo/mint_public(payload.to_addr, payload.amount);
     }
 
@@ -21,7 +20,7 @@ program izar_sepolia_proxy_v1.aleo {
         // tranfer fee to fee account
         zk_sepolia_eth.leo/transfer_public(proxy_owner(), payload.fee);
         // burn token
-        zk_sepolia_eth.leo/burn_public(self.caller, payload.amount - payload.fee); // TODO: when leo update the compiler, we can use `self.singer` instead of `self.caller`
+        zk_sepolia_eth.leo/burn_public(self.caller, payload.amount - payload.fee);
     }
 
     transition upgrade (public new_contract: address) {
