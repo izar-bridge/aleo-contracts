@@ -38,7 +38,7 @@ program izar_protocol_v1.aleo {
     }
 
     inline protocol_contract() -> address {
-        return aleo1zkat7uyv8c6f7vcmj6rfg7ujgp0ydzqgy2lrrj4az6hqwl209uqslyrp36;
+        return aleo1e5szs84jql2hn08ffxc7yn97wa8s9vk7jgshcddxmaekdxh85upsdt8p9g;
     }
 
     /* config setup */

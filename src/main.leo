@@ -7,6 +7,10 @@ program izar_token_proxy_v1.aleo {
         return aleo1yu6ssnehj4plgznatenfut3hkrfus26kqd226k99wfx79jqmsuxqfernns;
     }
 
+    inline proxy_address () -> address {
+        return aleo1wtafw0cw4ckqczq2mvhc8zp9p845ptjkydzz8wtm4fp5haurjg9s8y92qe;
+    }
+
     transition receive_payload (signatures: [signature; 20], keepers: [address; 20], payload: IzarRecvMsg) {
         izar_protocol_v1.leo/verify(signatures, keepers, payload);
         izar_token.leo/mint_public(payload.to_addr, payload.amount, payload.token_id);
