@@ -15,7 +15,7 @@ program izar_protocol_v1.aleo {
         nonce: u128,
         to_addr: address,
         from_chain_id: u32,
-        from_asset_addr: field,
+        from_asset_addr: field, // (from_chain_id, from_asset_addr) construct a unique asset
         token_id: u32,
         amount: u128,
     }
