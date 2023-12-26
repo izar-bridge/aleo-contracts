@@ -1,6 +1,6 @@
 program izar_token.aleo {
     mapping accounts: Account => u128;
-    mapping token_exist: u32 => bool;
+    mapping token_meta: u32 => IzarTokenMeta;
     mapping contract_owner: bool => address;
     mapping initialed: bool => bool;
 
@@ -47,21 +47,20 @@ program izar_token.aleo {
         Mapping::set(contract_owner, true, new_owner);
     }
 
-    transition regist_token (token_meta: IzarTokenMeta) {
-        return then finalize(token_meta, self.caller);
+    transition regist_token (metadata: IzarTokenMeta) {
+        return then finalize(metadata, self.caller);
     }
 
-    finalize regist_token (meta: IzarTokenMeta, caller: address) {
+    finalize regist_token (metadata: IzarTokenMeta, caller: address) {
         let is_initailized: bool = Mapping::get_or_use(initialed, true, false);
         assert(is_initailized);
 
         let current_owner: address = Mapping::get(contract_owner, true);
         assert_eq(current_owner, caller);
 
-        let is_exist: bool = Mapping::get_or_use(token_exist, meta.token_id, false);
-        assert(!is_exist);
+        assert(!Mapping::contains(token_meta, metadata.token_id));
 
-        Mapping::set(token_exist, meta.token_id, true);
+        Mapping::set(token_meta, metadata.token_id, metadata);
     }
 
     transition mint_public(public receiver: address, public amount: u128, public token_id: u32) {
@@ -77,7 +76,7 @@ program izar_token.aleo {
         assert_eq(current_owner, caller);
 
         // check token exist
-        assert(Mapping::contains(token_exist, receiver.token_id));
+        assert(Mapping::contains(token_meta, receiver.token_id));
 
         let current_amount: u128 = Mapping::get_or_use(accounts, receiver, 0u128);
         Mapping::set(accounts, receiver, current_amount + amount);
@@ -96,7 +95,7 @@ program izar_token.aleo {
         assert_eq(current_owner, caller);
 
         // check token exist
-        assert(Mapping::contains(token_exist, token_id));
+        assert(Mapping::contains(token_meta, token_id));
     }
 
     transition burn_public (public receiver: address, public amount: u128, public token_id: u32) {
@@ -112,7 +111,7 @@ program izar_token.aleo {
         assert_eq(current_owner, caller);
 
         // check token exist
-        assert(Mapping::contains(token_exist, receiver.token_id));
+        assert(Mapping::contains(token_meta, receiver.token_id));
 
         let current_amount: u128 = Mapping::get_or_use(accounts, receiver, 0u128);
         Mapping::set(accounts, receiver, current_amount - amount);
@@ -131,7 +130,7 @@ program izar_token.aleo {
         assert_eq(current_owner, caller);
 
         // check token exist
-        assert(Mapping::contains(token_exist, token_id));
+        assert(Mapping::contains(token_meta, token_id));
     }
 
     transition transfer_public(public receiver: address, public amount: u128, public token_id: u32) {
@@ -148,7 +147,7 @@ program izar_token.aleo {
 
     finalize transfer_public(public sender: Account, public receiver: Account, public amount: u128) {
         // check token exist
-        assert(Mapping::contains(token_exist, receiver.token_id));
+        assert(Mapping::contains(token_meta, receiver.token_id));
 
         let sender_amount: u128 = Mapping::get_or_use(accounts, sender, 0u128);
         Mapping::set(accounts, sender, sender_amount - amount);
@@ -215,7 +214,7 @@ program izar_token.aleo {
 
     finalize transfer_public_to_private(sender: Account, amount: u128) {
         // check token exist
-        assert(Mapping::contains(token_exist, sender.token_id));
+        assert(Mapping::contains(token_meta, sender.token_id));
 
         let current_amount: u128 = Mapping::get_or_use(accounts, sender, 0u128);
         Mapping::set(accounts, sender, current_amount - amount);
