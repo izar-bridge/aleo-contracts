@@ -27,4 +27,9 @@ program izar_token_proxy_v1.aleo {
         assert_eq(self.caller, proxy_owner());
         izar_token.leo/transfer_ownership(new_contract);
     }
+
+    transition proxy_regist_token (token_meta: IzarTokenMeta) {
+        assert_eq(self.caller, proxy_owner());
+        izar_token.leo/regist_token(token_meta);
+    }
 }

@@ -5,14 +5,18 @@ program izar_token_proxy_v1.aleo;
 
 
 
+struct Account:
+    holder as address;
+    token_id as u32;
+
+struct IzarTokenMeta:
+    token_id as u32;
+    from_chain_id as u32;
+    token_name as field;
 
 struct Nonce:
     chain_id as u32;
     nonce as u128;
-
-struct Account:
-    holder as address;
-    token_id as u32;
 
 struct IzarRecvMsg:
     from_chain_id as u32;
@@ -30,6 +34,9 @@ struct IzarCrossMsg:
     token_id as u32;
     amount as u128;
     fee as u128;
+
+
+
 
 
 
@@ -73,4 +80,16 @@ function upgrade:
 
 finalize upgrade:
     input r0 as izar_token.aleo/transfer_ownership.future;
+    await r0;
+
+
+function proxy_regist_token:
+    input r0 as IzarTokenMeta.private;
+    assert.eq self.caller aleo1yu6ssnehj4plgznatenfut3hkrfus26kqd226k99wfx79jqmsuxqfernns;
+    call izar_token.aleo/regist_token r0 into r1;
+    async proxy_regist_token r1 into r2;
+    output r2 as izar_token_proxy_v1.aleo/proxy_regist_token.future;
+
+finalize proxy_regist_token:
+    input r0 as izar_token.aleo/regist_token.future;
     await r0;
