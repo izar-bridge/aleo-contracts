@@ -1,5 +1,5 @@
-import izar_token.leo;
 import izar_protocol_v1.leo;
+import izar_token.leo;
 
 // The 'izar_protocol_v3' program.
 program izar_token_proxy_v1.aleo {

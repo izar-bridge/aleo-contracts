@@ -1,5 +1,5 @@
-import izar_token.aleo;
 import izar_protocol_v1.aleo;
+import izar_token.aleo;
 program izar_token_proxy_v1.aleo;
 
 
@@ -8,6 +8,23 @@ program izar_token_proxy_v1.aleo;
 
 
 
+
+struct IzarRecvMsg:
+    from_chain_id as u32;
+    nonce as u128;
+    to_addr as address;
+    to_asset_addr as address;
+    protocol_addr as address;
+    amount as u128;
+    token_id as u32;
+
+struct IzarCrossMsg:
+    to_chain_id as u32;
+    to_addr as field;
+    to_asset_addr as field;
+    token_id as u32;
+    amount as u128;
+    fee as u128;
 
 
 function receive_payload:
