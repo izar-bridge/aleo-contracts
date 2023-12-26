@@ -6,8 +6,10 @@ program izar_token_proxy_v1.aleo;
 
 
 
-
-
+struct Nonce {
+    chain_id: u32,
+    nonce: u128,
+}
 
 struct IzarRecvMsg:
     from_chain_id as u32;
@@ -25,6 +27,7 @@ struct IzarCrossMsg:
     token_id as u32;
     amount as u128;
     fee as u128;
+
 
 
 function receive_payload:
