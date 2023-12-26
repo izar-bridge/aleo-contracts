@@ -7,7 +7,7 @@ struct Account:
 struct IzarTokenMeta:
     token_id as u32;
     from_chain_id as u32;
-    token_name as field;
+    from_asset_addr as field;
 
 record IzarToken:
     owner as address.private;
@@ -79,6 +79,24 @@ finalize regist_token:
     not r4 into r5;
     assert.eq r5 true;
     set r0 into token_meta[r0.token_id];
+
+
+function verify_token:
+    input r0 as u32.private;
+    input r1 as u32.private;
+    input r2 as field.private;
+    async verify_token r0 r1 r2 self.caller into r3;
+    output r3 as izar_token.aleo/verify_token.future;
+
+finalize verify_token:
+    input r0 as u32.public;
+    input r1 as u32.public;
+    input r2 as field.public;
+    input r3 as address.public;
+    get token_meta[r0] into r4;
+    assert.eq r4.token_id r0;
+    assert.eq r4.from_chain_id r1;
+    assert.eq r4.from_asset_addr r2;
 
 
 function mint_public:

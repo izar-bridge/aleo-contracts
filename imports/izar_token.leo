@@ -12,7 +12,7 @@ program izar_token.aleo {
     struct IzarTokenMeta {
         token_id: u32,
         from_chain_id: u32,
-        token_name: field,
+        from_asset_addr: field,
     }
 
     record IzarToken {
@@ -61,6 +61,18 @@ program izar_token.aleo {
         assert(!Mapping::contains(token_meta, metadata.token_id));
 
         Mapping::set(token_meta, metadata.token_id, metadata);
+    }
+
+    transition verify_token (token_id: u32, from_chain_id: u32, from_asset_addr: field) {
+        return then finalize(token_id, from_chain_id, from_asset_addr, self.caller);
+    }
+
+    finalize verify_token (token_id: u32, from_chain_id: u32, from_asset_addr: field, caller: address) {
+        let metadata: IzarTokenMeta = Mapping::get(token_meta, token_id);
+
+        assert_eq(metadata.token_id, token_id);
+        assert_eq(metadata.from_chain_id, from_chain_id);
+        assert_eq(metadata.from_asset_addr, from_asset_addr);
     }
 
     transition mint_public(public receiver: address, public amount: u128, public token_id: u32) {

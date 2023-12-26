@@ -5,13 +5,13 @@ struct Nonce:
     nonce as u128;
 
 struct IzarRecvMsg:
-    from_chain_id as u32;
+    protocol_addr as address;
     nonce as u128;
     to_addr as address;
-    to_asset_addr as address;
-    protocol_addr as address;
-    amount as u128;
+    from_chain_id as u32;
+    from_asset_addr as field;
     token_id as u32;
+    amount as u128;
 
 struct IzarCrossMsg:
     to_chain_id as u32;
@@ -252,8 +252,9 @@ finalize verify:
     is.eq r1 r5 into r6;
     assert.eq r6 true;
     get izar_config[1u8] into r7;
-    div r7 3u32 into r8;
-    mul r8 2u32 into r9;
-    gte r2 r9 into r10;
-    assert.eq r10 true;
+    sub r7 1u32 into r8;
+    div r8 3u32 into r9;
+    sub r7 r9 into r10;
+    gte r2 r10 into r11;
+    assert.eq r11 true;
     set true into nonces[r0];

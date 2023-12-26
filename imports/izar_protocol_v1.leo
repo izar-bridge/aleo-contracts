@@ -11,13 +11,13 @@ program izar_protocol_v1.aleo {
     }
 
     struct IzarRecvMsg {
-        from_chain_id: u32,
+        protocol_addr: address, // avoid replay attack when updated this contract
         nonce: u128,
         to_addr: address,
-        to_asset_addr: address,
-        protocol_addr: address,
-        amount: u128,
+        from_chain_id: u32,
+        from_asset_addr: field,
         token_id: u32,
+        amount: u128,
     }
 
     struct IzarCrossMsg {
@@ -96,8 +96,8 @@ program izar_protocol_v1.aleo {
 
         // check keeper digest & accepted
         assert(keeper_digest == Mapping::get(izar_digest, true));
-        let validator_num: u32 = Mapping::get(izar_config, 1u8);
-        assert(accepted >= validator_num / 3u32 * 2u32); // TODO: check this
+        let num: u32 = Mapping::get(izar_config, 1u8);
+        assert(accepted >= num - (num - 1u32) / 3u32);
 
         // set nonce
         Mapping::set(nonces, nonce, true);
