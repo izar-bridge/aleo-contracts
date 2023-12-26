@@ -10,6 +10,10 @@ struct Nonce:
     chain_id as u32;
     nonce as u128;
 
+struct Account:
+    holder as address;
+    token_id as u32;
+
 struct IzarRecvMsg:
     from_chain_id as u32;
     nonce as u128;
