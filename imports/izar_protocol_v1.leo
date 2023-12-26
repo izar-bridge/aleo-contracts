@@ -1,4 +1,4 @@
-program izar_protocol_v3.aleo {
+program izar_protocol_v1.aleo {
     mapping izar_keeper: bool => [address; 20];
     mapping izar_digest: bool => scalar;
     // 0: current_epoch, 1: current_keeper_num;
@@ -17,17 +17,19 @@ program izar_protocol_v3.aleo {
         to_asset_addr: address,
         protocol_addr: address,
         amount: u128,
+        token_id: u32,
     }
 
     struct IzarCrossMsg {
         to_chain_id: u32,
         to_addr: field,
         to_asset_addr: field,
+        token_id: u32,
         amount: u128,
         fee: u128,
     }
 
-    inline contract_owner() -> address {
+    inline protocol_owner() -> address {
         return aleo1yu6ssnehj4plgznatenfut3hkrfus26kqd226k99wfx79jqmsuxqfernns;
     }
 
@@ -41,11 +43,12 @@ program izar_protocol_v3.aleo {
 
     /* config setup */
     transition update_keeper (keepers: [address; 20]) {
-        assert_eq(self.caller, contract_owner());
-        return then finalize (keepers);
+        assert_eq(self.caller, protocol_owner());
+        let digest: scalar = Poseidon8::hash_to_scalar(keepers);
+        return then finalize (keepers, digest);
     }
 
-    finalize update_keeper (keepers: [address; 20]) {
+    finalize update_keeper (keepers: [address; 20], digest: scalar) {
         let accpeted: u32 = 0u32;
 
         for i: u8 in 0u8..20u8 {
@@ -56,6 +59,7 @@ program izar_protocol_v3.aleo {
 
         Mapping::set(izar_keeper, true, keepers);
         Mapping::set(izar_config, 1u8, accpeted);
+        Mapping::set(izar_digest, true, digest);
     }
 
     function verify_sigs (keepers: [address; 20], signatures: [signature; 20], msg: IzarRecvMsg) -> (scalar, u32) {

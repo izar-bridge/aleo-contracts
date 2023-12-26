@@ -1,4 +1,4 @@
-program zk_sepolia_eth.aleo {
+program izar_arc20_token.aleo {
     mapping account: address => u128;
     mapping contract_ownership: bool => address;
     mapping initialed: bool => bool;
@@ -141,5 +141,4 @@ program zk_sepolia_eth.aleo {
         let current_amount: u128 = Mapping::get_or_use(account, sender, 0u128);
         Mapping::set(account, sender, current_amount - amount);
     }
-
 }
