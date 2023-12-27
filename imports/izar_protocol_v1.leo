@@ -16,7 +16,7 @@ program izar_protocol_v1.aleo {
         to_addr: address,
         from_chain_id: u32,
         from_asset_addr: field, // (from_chain_id, from_asset_addr) construct a unique asset
-        token_id: u32,
+        token_id: field,
         amount: u128,
     }
 
@@ -24,7 +24,7 @@ program izar_protocol_v1.aleo {
         to_chain_id: u32,
         to_addr: field,
         to_asset_addr: field,
-        token_id: u32,
+        token_id: field,
         amount: u128,
         fee: u128,
     }

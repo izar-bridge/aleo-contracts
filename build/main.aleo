@@ -4,6 +4,15 @@ program izar_token_proxy_v1.aleo;
 
 
 
+
+struct Account:
+    holder as address;
+    token_id as field;
+
+struct IzarTokenMeta:
+    from_chain_id as u32;
+    from_asset_addr as field;
+
 struct Nonce:
     chain_id as u32;
     nonce as u128;
@@ -14,26 +23,16 @@ struct IzarRecvMsg:
     to_addr as address;
     from_chain_id as u32;
     from_asset_addr as field;
-    token_id as u32;
+    token_id as field;
     amount as u128;
 
 struct IzarCrossMsg:
     to_chain_id as u32;
     to_addr as field;
     to_asset_addr as field;
-    token_id as u32;
+    token_id as field;
     amount as u128;
     fee as u128;
-
-
-struct Account:
-    holder as address;
-    token_id as u32;
-
-struct IzarTokenMeta:
-    token_id as u32;
-    from_chain_id as u32;
-    from_asset_addr as field;
 
 
 

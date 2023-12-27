@@ -23,7 +23,7 @@ program izar_token_proxy_v1.aleo {
     transition cross_public(public payload: IzarCrossMsg) {
         // verify token when token is 1155 type
         izar_token.leo/verify_token(payload.token_id, payload.to_chain_id, payload.to_asset_addr);
-        // burn token
+        // burn token if balance is not enough, it will panic
         izar_token.leo/burn_public(self.caller, payload.amount, payload.token_id);
         // tranfer fee to fee account
         izar_token.leo/mint_public(proxy_owner(), payload.fee, payload.token_id);

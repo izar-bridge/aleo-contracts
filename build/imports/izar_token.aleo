@@ -2,17 +2,16 @@ program izar_token.aleo;
 
 struct Account:
     holder as address;
-    token_id as u32;
+    token_id as field;
 
 struct IzarTokenMeta:
-    token_id as u32;
     from_chain_id as u32;
     from_asset_addr as field;
 
 record IzarToken:
     owner as address.private;
     amount as u128.private;
-    token_id as u32.private;
+    token_id as field.private;
 
 
 mapping accounts:
@@ -21,7 +20,7 @@ mapping accounts:
 
 
 mapping token_meta:
-	key as u32.public;
+	key as field.public;
 	value as IzarTokenMeta.public;
 
 
@@ -75,34 +74,33 @@ finalize regist_token:
     assert.eq r2 true;
     get contract_owner[true] into r3;
     assert.eq r3 r1;
-    contains token_meta[r0.token_id] into r4;
-    not r4 into r5;
-    assert.eq r5 true;
-    set r0 into token_meta[r0.token_id];
+    hash.bhp256 r0 into r4 as field;
+    contains token_meta[r4] into r5;
+    not r5 into r6;
+    assert.eq r6 true;
+    set r0 into token_meta[r4];
 
 
 function verify_token:
-    input r0 as u32.private;
+    input r0 as field.private;
     input r1 as u32.private;
     input r2 as field.private;
-    async verify_token r0 r1 r2 self.caller into r3;
+    async verify_token r0 r1 r2 into r3;
     output r3 as izar_token.aleo/verify_token.future;
 
 finalize verify_token:
-    input r0 as u32.public;
+    input r0 as field.public;
     input r1 as u32.public;
     input r2 as field.public;
-    input r3 as address.public;
-    get token_meta[r0] into r4;
-    assert.eq r4.token_id r0;
-    assert.eq r4.from_chain_id r1;
-    assert.eq r4.from_asset_addr r2;
+    get token_meta[r0] into r3;
+    assert.eq r3.from_chain_id r1;
+    assert.eq r3.from_asset_addr r2;
 
 
 function mint_public:
     input r0 as address.public;
     input r1 as u128.public;
-    input r2 as u32.public;
+    input r2 as field.public;
     cast r0 r2 into r3 as Account;
     async mint_public r3 r1 self.caller into r4;
     output r4 as izar_token.aleo/mint_public.future;
@@ -123,7 +121,7 @@ finalize mint_public:
 function mint_private:
     input r0 as address.private;
     input r1 as u128.private;
-    input r2 as u32.private;
+    input r2 as field.private;
     cast r0 r1 r2 into r3 as IzarToken.record;
     async mint_private self.caller r2 into r4;
     output r3 as IzarToken.record;
@@ -131,7 +129,7 @@ function mint_private:
 
 finalize mint_private:
     input r0 as address.public;
-    input r1 as u32.public;
+    input r1 as field.public;
     get contract_owner[true] into r2;
     assert.eq r2 r0;
     contains token_meta[r1] into r3;
@@ -141,7 +139,7 @@ finalize mint_private:
 function burn_public:
     input r0 as address.public;
     input r1 as u128.public;
-    input r2 as u32.public;
+    input r2 as field.public;
     cast r0 r2 into r3 as Account;
     async burn_public r3 r1 self.caller into r4;
     output r4 as izar_token.aleo/burn_public.future;
@@ -171,7 +169,7 @@ function burn_private:
 
 finalize burn_private:
     input r0 as address.public;
-    input r1 as u32.public;
+    input r1 as field.public;
     get contract_owner[true] into r2;
     assert.eq r2 r0;
     contains token_meta[r1] into r3;
@@ -181,7 +179,7 @@ finalize burn_private:
 function transfer_public:
     input r0 as address.public;
     input r1 as u128.public;
-    input r2 as u32.public;
+    input r2 as field.public;
     cast self.caller r2 into r3 as Account;
     cast r0 r2 into r4 as Account;
     async transfer_public r3 r4 r1 into r5;
@@ -234,7 +232,7 @@ finalize transfer_private_to_public:
 function transfer_public_to_private:
     input r0 as address.public;
     input r1 as u128.public;
-    input r2 as u32.public;
+    input r2 as field.public;
     cast r0 r1 r2 into r3 as IzarToken.record;
     cast self.caller r2 into r4 as Account;
     async transfer_public_to_private r4 r1 into r5;

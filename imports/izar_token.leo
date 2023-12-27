@@ -1,16 +1,16 @@
 program izar_token.aleo {
     mapping accounts: Account => u128;
-    mapping token_meta: u32 => IzarTokenMeta;
+    mapping token_meta: field => IzarTokenMeta;
     mapping contract_owner: bool => address;
     mapping initialed: bool => bool;
 
     struct Account {
         holder: address,
-        token_id: u32,
+        token_id: field,
     }
 
+    // token_id = hash_bhp256(metadata)
     struct IzarTokenMeta {
-        token_id: u32,
         from_chain_id: u32,
         from_asset_addr: field,
     }
@@ -18,7 +18,7 @@ program izar_token.aleo {
     record IzarToken {
         owner: address,
         amount: u128,
-        token_id: u32,
+        token_id: field,
     }
 
     transition initial (owner: address) {
@@ -58,24 +58,25 @@ program izar_token.aleo {
         let current_owner: address = Mapping::get(contract_owner, true);
         assert_eq(current_owner, caller);
 
-        assert(!Mapping::contains(token_meta, metadata.token_id));
+        let token_id: field = BHP256::hash_to_field(metadata);
 
-        Mapping::set(token_meta, metadata.token_id, metadata);
+        assert(!Mapping::contains(token_meta, token_id));
+
+        Mapping::set(token_meta, token_id, metadata);
     }
 
-    transition verify_token (token_id: u32, from_chain_id: u32, from_asset_addr: field) {
-        return then finalize(token_id, from_chain_id, from_asset_addr, self.caller);
+    transition verify_token (token_id: field, from_chain_id: u32, from_asset_addr: field) {
+        return then finalize(token_id, from_chain_id, from_asset_addr);
     }
 
-    finalize verify_token (token_id: u32, from_chain_id: u32, from_asset_addr: field, caller: address) {
+    finalize verify_token (token_id: field, from_chain_id: u32, from_asset_addr: field) {
         let metadata: IzarTokenMeta = Mapping::get(token_meta, token_id);
 
-        assert_eq(metadata.token_id, token_id);
         assert_eq(metadata.from_chain_id, from_chain_id);
         assert_eq(metadata.from_asset_addr, from_asset_addr);
     }
 
-    transition mint_public(public receiver: address, public amount: u128, public token_id: u32) {
+    transition mint_public(public receiver: address, public amount: u128, public token_id: field) {
         let account: Account = Account {
             holder: receiver,
             token_id: token_id,
@@ -94,7 +95,7 @@ program izar_token.aleo {
         Mapping::set(accounts, receiver, current_amount + amount);
     }
 
-    transition mint_private(receiver: address, amount: u128, token_id: u32) -> IzarToken {
+    transition mint_private(receiver: address, amount: u128, token_id: field) -> IzarToken {
         return IzarToken {
             owner: receiver,
             amount: amount,
@@ -102,7 +103,7 @@ program izar_token.aleo {
         } then finalize (self.caller, token_id);
     }
 
-    finalize mint_private (caller: address, token_id: u32) {
+    finalize mint_private (caller: address, token_id: field) {
         let current_owner: address = Mapping::get(contract_owner, true);
         assert_eq(current_owner, caller);
 
@@ -110,7 +111,7 @@ program izar_token.aleo {
         assert(Mapping::contains(token_meta, token_id));
     }
 
-    transition burn_public (public receiver: address, public amount: u128, public token_id: u32) {
+    transition burn_public (public receiver: address, public amount: u128, public token_id: field) {
         let receiver_account: Account = Account {
             holder: receiver,
             token_id: token_id,
@@ -137,7 +138,7 @@ program izar_token.aleo {
         } then finalize (self.caller, token.token_id);
     }
 
-    finalize burn_private (caller: address, token_id: u32) {
+    finalize burn_private (caller: address, token_id: field) {
         let current_owner: address = Mapping::get(contract_owner, true);
         assert_eq(current_owner, caller);
 
@@ -145,7 +146,7 @@ program izar_token.aleo {
         assert(Mapping::contains(token_meta, token_id));
     }
 
-    transition transfer_public(public receiver: address, public amount: u128, public token_id: u32) {
+    transition transfer_public(public receiver: address, public amount: u128, public token_id: field) {
         let sender_account: Account = Account {
             holder: self.caller,
             token_id: token_id,
@@ -209,7 +210,7 @@ program izar_token.aleo {
         Mapping::set(accounts, receiver, current_amount + amount);
     }
 
-    transition transfer_public_to_private(public receiver: address, public amount: u128, public token_id: u32) -> IzarToken {
+    transition transfer_public_to_private(public receiver: address, public amount: u128, public token_id: field) -> IzarToken {
         let transferred: IzarToken = IzarToken {
             owner: receiver,
             amount: amount,

@@ -10,14 +10,14 @@ struct IzarRecvMsg:
     to_addr as address;
     from_chain_id as u32;
     from_asset_addr as field;
-    token_id as u32;
+    token_id as field;
     amount as u128;
 
 struct IzarCrossMsg:
     to_chain_id as u32;
     to_addr as field;
     to_asset_addr as field;
-    token_id as u32;
+    token_id as field;
     amount as u128;
     fee as u128;
 
