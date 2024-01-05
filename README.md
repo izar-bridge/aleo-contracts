@@ -1,6 +1,6 @@
 # Welcome to IZAR Bridge
 
-![w6z473.png](https://files.catbox.moe/w6z473.png)
+![b2qhya.png](https://files.catbox.moe/b2qhya.png)
 
 ## The Future of Cross-Chain Privacy
 
@@ -12,13 +12,13 @@ IZAR can bring significant value to the Aleo ecosystem by providing a cross-chai
 
 ## Details
 
-![arch.png](https://1949658826-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FnxA9NmdC2OhVMmg1iXEx%2Fuploads%2F7dpMPFcYAQYrZxoe6dqI%2FFrame%203.png?alt=media&token=5d0cde9e-001e-44ee-b442-a0f244a2e1cf)
+![6g7ihs.png](https://files.catbox.moe/6g7ihs.png)
 
-The Aleo contracts consist of two main parts:
+The Izar Aleo contract consist of there parts:
 
-1. The signature scheme called `izar-sign`, which is used to verify signatures within the contracts. This scheme is based on an implementation from the [`snarkvm`](https://github.com/AleoHQ/snarkVM/blob/testnet3/console/account/src/signature/sign.rs) library, with some modifications made to the original scheme. For example, `g_scalar_multiply` has been replaced with `group::GEN`. The current implementation of `izar-sign` is not optimal and will be improved in the future once the Leo language is more mature. Additionally, better ways to verify validators like MPC or zkSnark will be implemented.
-2. The Bridge and Izar-token contracts, which are responsible for mapping tokens between Aleo and other chains. Due to limitations in the current version of the Leo language, the bridge and token contracts must be written together. The main functions of the bridge and token are `cross` and `receive`, respectively, which handle the movement of tokens between Aleo and the target chain. Currently, the contracts use a method similar to EIP-1155 to support multiple types of tokens, but in the future, independent contracts will be implemented for each mapped token.
-3. Old contract [`izar_v1`](https://github.com/izar-bridge/aleo-contracts/blob/master/imports/izar_v1.leo)
+1. [*izar-protocol*](https://github.com/izar-bridge/aleo-contracts/tree/master/imports/izar_protocol_v1.leo) is the cross-chain protocol of Izar, containing implemented verification signatures as well as governance-related logic.
+2. [*izar-token*](https://github.com/izar-bridge/aleo-contracts/tree/master/imports/izar_token.leo) is izar's mapped token, mainly mapping the corresponding tokens on different chains, with logic referring to **erc1155**.
+3. [*izar-token-proxy*](https://github.com/izar-bridge/aleo-contracts/tree/master/src/main.leo) is the proxy contract for **izar-token**, mainly controlling permissions and binding cross-chain logic.
 
 ## Build Guide
 
@@ -28,6 +28,3 @@ To compile this Aleo program, run:
 leo build
 ```
 
-## Contract Info
-
-[aleo-explore](https://explorer.hamp.app/program?id=izar_bridge_v2_1.aleo)
