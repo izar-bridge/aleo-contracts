@@ -7,10 +7,6 @@ program izar_token_proxy_v1.aleo {
         return aleo1yu6ssnehj4plgznatenfut3hkrfus26kqd226k99wfx79jqmsuxqfernns;
     }
 
-    inline proxy_address () -> address {
-        return aleo1wtafw0cw4ckqczq2mvhc8zp9p845ptjkydzz8wtm4fp5haurjg9s8y92qe;
-    }
-
     transition receive_payload (signatures: [signature; 20], keepers: [address; 20], payload: izar_protocol_v1.aleo/IzarRecvMsg) {
         // verify token when token is 1155 type
         izar_token.aleo/verify_token(payload.token_id, payload.from_chain_id, payload.from_asset_addr);
