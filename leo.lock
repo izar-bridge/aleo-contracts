@@ -1,0 +1,13 @@
+[[package]]
+name = "izar_protocol_v1.aleo"
+location = "local"
+path = "/home/naoki/izar/izar_token_proxy_v1/izar_protocol_v1"
+checksum = "85e0717c4a942aaaaf5c443cedc9937a4f9e1568c4c2abb666c113b0a3b09ff7"
+dependencies = []
+
+[[package]]
+name = "izar_token.aleo"
+location = "local"
+path = "/home/naoki/izar/izar_token_proxy_v1/izar_token"
+checksum = "c007999c0e9820fe24f3bb9c21ed7b49b291679c00cdcaf9484230c68fbbae88"
+dependencies = []

@@ -1,0 +1,18 @@
+{
+    "program": "izar_token_proxy_v1.aleo",
+    "version": "0.0.0",
+    "description": "",
+    "license": "MIT",
+    "dependencies" : [
+        {
+            "name": "izar_protocol_v1.aleo",
+            "location": "local",
+            "path": "izar_protocol_v1"
+        },
+        {
+            "name": "izar_token.aleo",
+            "location": "local",
+            "path": "izar_token"
+        }
+    ]
+  }
